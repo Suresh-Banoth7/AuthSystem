@@ -5,7 +5,8 @@ FROM openjdk:17-jdk-slim
 WORKDIR /app
 
 # Copy the jar file from Authentication/target folder
-COPY Authentication/target/Authentication-0.0.1-SNAPSHOT.jar app.jar
+COPY target/Authentication-0.0.1-SNAPSHOT.jar app.jar
+
 
 # Expose port
 EXPOSE 8080
