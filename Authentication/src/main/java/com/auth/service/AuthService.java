@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -47,19 +49,25 @@ public class AuthService {
         return "User registered successfully";
     }
 
-    public String login(@Valid LoginRequest request) {
+    public  Map<String, Object> login(@Valid LoginRequest request) {
         Optional<User> user = userRepository.findByEmail(request.getEmail());
 
         if (user.isEmpty()) {
-            return "Email is not registered";
+            throw new RuntimeException("Email is not registered");
         }
 
         User existingUser = user.get();
         if (!passwordEncoder.matches(request.getPassword(),existingUser.getPassword())) {
-            return "Invalid password";
+            throw new RuntimeException("Invalid password");
         }
 
-        return jwtUtils.generateToken(existingUser.getEmail());
+        String token = jwtUtils.generateToken(existingUser.getEmail());
+        Map<String, Object> response = new HashMap<>();
+        response.put("token", token);
+        response.put("user", existingUser);
+
+        return response;
+
     }
 
     public String forgotPassword(ForgotPasswordRequest request) {

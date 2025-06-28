@@ -15,6 +15,8 @@ import com.auth.service.AuthService;
 
 import jakarta.validation.Valid;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/auth")
 @CrossOrigin(origins = "*")
@@ -30,8 +32,8 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@Valid @RequestBody LoginRequest request) {
-        String result = authService.login(request);
+    public ResponseEntity<Map<String, Object>> login(@Valid @RequestBody LoginRequest request) {
+        Map<String, Object> result = authService.login(request);
         return ResponseEntity.ok(result);
     }
 
