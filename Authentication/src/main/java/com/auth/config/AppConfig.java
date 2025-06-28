@@ -42,11 +42,29 @@ public class AppConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/upload/**").permitAll()
-                        .requestMatchers("/csv/**").permitAll()
-                        .requestMatchers("/api/products", "/api/categories").permitAll()
-                        .requestMatchers("/admin/**").hasRole("ADMIN")  // protect admin routes
+                        .requestMatchers(
+                                // Frontend/public routes
+                                "/",
+                                "/index.html",
+                                "/favicon.ico",
+                                "/static/**",
+                                "/product",
+                                "/about",
+                                "/signup",
+                                "/login",
+                                "/forgot-password",
+
+                                // Public APIs
+                                "/api/auth/**",
+                                "/api/products",
+                                "/api/categories",
+                                "/upload/**",
+                                "/csv/**"
+                        ).permitAll()
+
+                        .requestMatchers("/admin/**").hasRole("ADMIN") // Admin-protected routes
+
+                        // All others require authentication
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

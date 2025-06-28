@@ -31,11 +31,11 @@ public class AuthService {
     @Autowired
     private JwtUtils jwtUtils;
 
-    public String registerUser(SignupRequest request) {
+    public Map<String, Object> registerUser(SignupRequest request) {
         Optional<User> user = userRepository.findByEmail(request.getEmail());
 
         if (user.isPresent()) {
-            return "Email already exists";
+            throw new RuntimeException("Email already exists");
         }
 
         User newUser = new User();
@@ -46,7 +46,11 @@ public class AuthService {
         newUser.setRole(request.getRole());
 
         userRepository.save(newUser);
-        return "User registered successfully";
+
+        Map<String, Object> response = new HashMap<>();
+
+        response.put("user", newUser);
+        return  response;
     }
 
     public  Map<String, Object> login(@Valid LoginRequest request) {
